@@ -1,0 +1,260 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riley Mitchell - Social Media Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .section-title {
+            font-weight: 800;
+            font-size: 1.125rem; /* text-lg */
+            color: #1e293b; /* slate-800 */
+            border-bottom: 2px solid #0ea5e9; /* sky-500 */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .highlight {
+            color: #0ea5e9; /* sky-500 */
+            font-weight: 700;
+        }
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .project-link {
+            color: #0ea5e9;
+            text-decoration: underline;
+            transition: color 0.2s ease-in-out;
+        }
+        .project-link:hover {
+            color: #0369a1; /* sky-700 */
+        }
+        .skill-tag {
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .skill-tag:hover {
+            background-color: #0ea5e9; /* sky-500 */
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+        header {
+            background: linear-gradient(to right, #1e293b, #334155); /* slate-800 to slate-700 */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Header Section -->
+        <header class="text-white p-8 md:flex justify-between items-start">
+            <div>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">RILEY MITCHELL</h1>
+                <p class="text-xl text-sky-300 mt-2">Creative & Analytical Social Media Professional</p>
+            </div>
+            <div class="mt-6 md:mt-0 text-right text-sm">
+                <h3 class="font-bold text-sky-300 mb-2">Connect</h3>
+                <div class="flex items-center justify-end mb-2">
+                    <span class="mr-2">412-389-6643</span>
+                    <i data-lucide="phone"></i>
+                </div>
+                <div class="flex items-center justify-end mb-2">
+                    <span class="mr-2">rileymitchellart@gmail.com</span>
+                    <i data-lucide="mail"></i>
+                </div>
+                <div class="flex items-center justify-end">
+                    <span class="mr-2"><a href="https://youtu.be/v8l-Zj9QWmI" target="_blank" class="project-link">Dumb Luck (2023)</a></span>
+                    <i data-lucide="film"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-8">
+            <!-- Professional Summary -->
+            <section class="mb-8">
+                <p class="text-slate-600 text-center text-lg">
+                    Dynamic creative with a Fine Arts background, specializing in <span class="highlight">visual storytelling</span>, <span class="highlight">content creation</span>, and <span class="highlight">data-driven social media strategies</span>. Proven success in growing X (Twitter) engagement by 4.4% through compelling campaigns and analytics, eager to elevate brand presence as a Social Media Manager.
+                </p>
+            </section>
+
+            <!-- Key Projects & Analytics -->
+            <section class="mb-8">
+                <h2 class="section-title">Key Projects</h2>
+                <!-- X (Twitter) Account Growth -->
+                <div class="bg-slate-50 rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 card border border-slate-200 mb-6">
+                    <div class="w-full md:w-1/3 flex-shrink-0">
+                        <img src="https://i.imgur.com/aD36Yl6.jpg" alt="X Analytics Snapshot" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <h3 class="font-bold text-xl text-slate-700">X (Twitter) Account Growth</h3>
+                        <p class="text-slate-600 mt-2 mb-4">Drove significant audience growth and engagement over a one-year period through strategic content and community interaction.</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
+                            <div class="bg-white p-3 rounded-lg shadow-sm">
+                                <p class="text-2xl font-bold text-sky-600">795K+</p>
+                                <p class="text-sm text-slate-500">Impressions</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow-sm">
+                                <p class="text-2xl font-bold text-sky-600">4.4%</p>
+                                <p class="text-sm text-slate-500">Engagement Rate</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow-sm col-span-2 sm:col-span-1">
+                                <p class="text-2xl font-bold text-sky-600">2.2K/3.9K</p>
+                                <p class="text-sm text-slate-500">Verified Followers</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Animated Short Film -->
+                <div class="bg-slate-50 rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 card border border-slate-200 mb-6">
+                    <div class="w-full md:w-1/3 flex-shrink-0">
+                        <img src="https://i.imgur.com/Dshqobp.jpg" alt="Dumb Luck Film Still" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <h3 class="font-bold text-xl text-slate-700">Dumb Luck (2023) - Animated Short-Film</h3>
+                        <p class="text-slate-600 mt-2">Created and produced an original animated short film as a senior capstone project at Pennsylvania Western University, showcasing expertise in visual storytelling and animation for digital audiences. <a href="https://youtu.be/v8l-Zj9QWmI" target="_blank" class="project-link">View on YouTube</a>.</p>
+                    </div>
+                </div>
+                <!-- AI-Driven Trading Program -->
+                <div class="bg-slate-50 rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 card border border-slate-200">
+                    <div class="w-full md:w-1/3 flex-shrink-0">
+                        <img src="https://i.imgur.com/t0YqDkq.jpg" alt="AI Trading Program Chart" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <h3 class="font-bold text-xl text-slate-700">AI-Driven Trading Program</h3>
+                        <p class="text-slate-600 mt-2">Utilized AI tools to analyze data, strategize, develop, and launch a live trading program, demonstrating strong analytical and strategic planning skills applicable to data-driven social media campaigns.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Left Column (Experience, Education, Certifications) -->
+                <div class="md:col-span-2">
+                    <section class="mb-8">
+                        <h2 class="section-title">Professional History</h2>
+                        <div class="mb-6 card p-4 rounded-lg">
+                            <h3 class="font-bold text-lg text-slate-700">Substitute Teacher</h3>
+                            <p class="text-slate-500 italic">Chartiers Valley School District | Nov 2023 - Nov 2024</p>
+                            <ul class="list-disc list-inside mt-2 text-slate-600 space-y-1">
+                                <li>Managed diverse classroom environments, effectively communicating complex subjects.</li>
+                                <li>Utilized digital tools and platforms to deliver lesson plans and manage activities.</li>
+                                <li>Adapted content delivery to diverse audiences, mirroring social media audience targeting.</li>
+                            </ul>
+                        </div>
+                        <div class="card p-4 rounded-lg">
+                            <h3 class="font-bold text-lg text-slate-700">Service Worker</h3>
+                            <p class="text-slate-500 italic">Taco Bell | Apr 2020 - Aug 2021</p>
+                            <ul class="list-disc list-inside mt-2 text-slate-600 space-y-1">
+                                <li>Delivered excellent customer service in a fast-paced, high-volume environment.</li>
+                                <li>Developed strong interpersonal skills, enhancing client and community engagement.</li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section class="mb-8">
+                        <h2 class="section-title">Education</h2>
+                        <div class="card p-4 rounded-lg">
+                            <h3 class="font-bold text-lg text-slate-700">Pennsylvania Western University</h3>
+                            <p class="text-slate-500 italic">Graduated May 2023</p>
+                            <p class="text-slate-600 mt-2"><span class="font-semibold">Bachelor of Fine Arts:</span> Applied Media Arts - Cinema (Concentration: Traditional Animation, Minor: Illustration)</p>
+                        </div>
+                    </section>
+                    <section>
+                        <h2 class="section-title">Certifications</h2>
+                        <div class="card p-4 rounded-lg">
+                            <ul class="list-disc list-inside text-slate-600 space-y-1">
+                                <li>Cannabis Science and Industry, Pennsylvania Western University | 2023 <span class="italic text-sm"></span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column (Skills & Awards) -->
+                <div class="md:col-span-1">
+                    <section class="mb-8">
+                        <h2 class="section-title">Skills</h2>
+                        <div class="space-y-3">
+                            <span class="skill-tag inline-block bg-sky-100 text-sky-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">Content Creation</span>
+                            <span class="skill-tag inline-block bg-sky-100 text-sky-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">Animation & Illustration</span>
+                            <span class="skill-tag inline-block bg-sky-100 text-sky-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">Graphic Design</span>
+                            <span class="skill-tag inline-block bg-sky-100 text-sky-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">Social Media Analytics</span>
+                            <span class="skill-tag inline-block bg-sky-100 text-sky-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">Campaign Management</span>
+                            <span class="skill-tag inline-block bg-slate-100 text-slate-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">Data Analysis</span>
+                            <span class="skill-tag inline-block bg-slate-100 text-slate-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">AI Collaboration</span>
+                            <span class="skill-tag inline-block bg-slate-100 text-slate-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">Trend Spotting</span>
+                            <span class="skill-tag inline-block bg-slate-100 text-slate-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">Adobe Creative Suite</span>
+                            <span class="skill-tag inline-block bg-slate-100 text-slate-800 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">Microsoft Office</span>
+                        </div>
+                    </section>
+                    <section>
+                        <h2 class="section-title">Awards</h2>
+                        <div class="space-y-2 text-slate-600">
+                            <div class="flex items-start">
+                                <i data-lucide="award" class="w-4 h-4 mr-2 mt-1 text-sky-500 flex-shrink-0"></i>
+                                <span>PennWest President’s Excellence Award</span>
+                            </div>
+                            <div class="flex items-start">
+                                <i data-lucide="award" class="w-4 h-4 mr-2 mt-1 text-sky-500 flex-shrink-0"></i>
+                                <span>PennWest Dean's List Recipient</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
